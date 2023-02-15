@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: deployment-1
+    namespace: aks-svc1
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: deployment-1
+    template:
+        metadata:
+            labels:
+                app: deployment-1
+        spec:
+          containers:
+          - name: deployment-1
+            image: vdptest.azurecr.io/gray-vdp-web:latest
+            imagePullPolicy: Always
+            ports:
+            - containerPort: 8080 # the application listens to this port
+            env:
+            - name: service.name # the application expects to connect to the API at this endpoint
+              value: deployment-1
+            resources:
+              requests: # minimum resources required
+                cpu: 250m
+                memory: 64Mi
+              limits: # maximum resources allocated
+                cpu: 500m
+                memory: 512Mi
